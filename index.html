@@ -332,6 +332,7 @@ footer{background:var(--primary);padding:3rem 1.5rem 1.5rem;color:rgba(255,255,2
           <div id="rateStatus" style="text-align:right;font-size:.62rem;color:var(--muted);padding-bottom:.2rem;">⏳ Загружаем курсы...</div>
         </div>
 
+        <div id="calcErr" style="display:none;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;padding:9px 12px;font-size:.75rem;font-weight:500;margin-top:.6rem;line-height:1.5;"></div>
         <button class="exbtn" onclick="startEx()">Обменять →</button>
         <div class="sbadges">
           <div class="sb">🔒 SSL</div>
@@ -556,16 +557,31 @@ async function fetchRates(){
 }
 
 // ── CALCULATION ───────────────────────────────────────────
-// Note: setting .value via JS does NOT fire oninput → no infinite loop
+const MAX_USD = 10000000; // $10,000,000 limit
+
+function showErr(msg){
+  let el=document.getElementById('calcErr');
+  if(!el) return;
+  if(msg){ el.textContent='⚠️ '+msg; el.style.display='block'; }
+  else { el.style.display='none'; }
+}
+
 function calcFT(){
   const fa = parseFloat(document.getElementById('fromAmt').value);
   if(!fa || fa<=0){
     document.getElementById('toAmt').value='';
-    updUSD(0,0); updRate(); return;
+    showErr(null); updUSD(0,0); updRate(); return;
   }
-  const ta = fa * getP(fromC) / getP(toC) * factor();
+  const fromUSD = fa * getP(fromC);
+  if(fromUSD > MAX_USD){
+    document.getElementById('toAmt').value='';
+    showErr('Максимальная сумма обмена — $10 000 000. Свяжитесь с поддержкой для крупных сделок.');
+    updUSD(0,0); return;
+  }
+  showErr(null);
+  const ta = fromUSD / getP(toC) * factor();
   document.getElementById('toAmt').value = fmt(ta);
-  updUSD(fa*getP(fromC), ta*getP(toC));
+  updUSD(fromUSD, ta*getP(toC));
   updRate();
 }
 
@@ -573,11 +589,18 @@ function calcTF(){
   const ta = parseFloat(document.getElementById('toAmt').value);
   if(!ta || ta<=0){
     document.getElementById('fromAmt').value='';
-    updUSD(0,0); updRate(); return;
+    showErr(null); updUSD(0,0); updRate(); return;
   }
-  const fa = ta * getP(toC) / getP(fromC) / factor();
+  const toUSD = ta * getP(toC);
+  if(toUSD > MAX_USD){
+    document.getElementById('fromAmt').value='';
+    showErr('Максимальная сумма обмена — $10 000 000. Свяжитесь с поддержкой для крупных сделок.');
+    updUSD(0,0); return;
+  }
+  showErr(null);
+  const fa = toUSD / getP(fromC) / factor();
   document.getElementById('fromAmt').value = fmt(fa);
-  updUSD(fa*getP(fromC), ta*getP(toC));
+  updUSD(fa*getP(fromC), toUSD);
   updRate();
 }
 
@@ -595,8 +618,9 @@ function fmt(n){
   if(Math.abs(n)<0.000001) return n.toExponential(4);
   if(Math.abs(n)<0.001)  return n.toFixed(6);
   if(Math.abs(n)<1)      return n.toFixed(4);
+  if(Math.abs(n)<1000)   return parseFloat(n.toFixed(4)).toString();
   if(Math.abs(n)<100000) return parseFloat(n.toFixed(2)).toString();
-  return Math.round(n).toLocaleString('en-US');
+  return Math.round(n).toString(); // NO toLocaleString — commas break type="number" inputs
 }
 
 // ── UI ────────────────────────────────────────────────────
