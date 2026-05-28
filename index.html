@@ -299,7 +299,7 @@ footer{background:var(--primary);padding:3rem 1.5rem 1.5rem;color:rgba(255,255,2
         <div class="crow">
           <div class="clabel">Отдаёте</div>
           <div class="cinner">
-            <input class="ainput" type="number" id="fromAmt" placeholder="0.00" min="0" step="any" oninput="calcFT()">
+            <input class="ainput" type="text" inputmode="decimal" id="fromAmt" placeholder="0.00" min="0" step="any" oninput="this.value=this.value.replace(/[^0-9.]/g,'');calcFT()">
             <div class="csel" onclick="openDD('from')">
               <div class="ci" id="fromIcon" style="background:#627EEA">Ξ</div>
               <div><div class="cc" id="fromCode">ETH</div><div class="cch" id="fromChain">ERC-20</div></div>
@@ -316,7 +316,7 @@ footer{background:var(--primary);padding:3rem 1.5rem 1.5rem;color:rgba(255,255,2
         <div class="crow">
           <div class="clabel">Получаете</div>
           <div class="cinner">
-            <input class="ainput" type="number" id="toAmt" placeholder="0.00" min="0" step="any" oninput="calcTF()">
+            <input class="ainput" type="text" inputmode="decimal" id="toAmt" placeholder="0.00" min="0" step="any" oninput="this.value=this.value.replace(/[^0-9.]/g,'');calcTF()">
             <div class="csel" onclick="openDD('to')">
               <div class="ci" id="toIcon" style="background:#005BBB">₴</div>
               <div><div class="cc" id="toCode">UAH</div><div class="cch" id="toChain">Украина</div></div>
@@ -557,7 +557,7 @@ async function fetchRates(){
 }
 
 // ── CALCULATION ───────────────────────────────────────────
-const MAX_USD = 10000000; // $10,000,000 limit
+const MAX_USD = 100000;
 
 function showErr(msg){
   let el=document.getElementById('calcErr');
@@ -575,7 +575,7 @@ function calcFT(){
   const fromUSD = fa * getP(fromC);
   if(fromUSD > MAX_USD){
     document.getElementById('toAmt').value='';
-    showErr('Максимальная сумма обмена — $10 000 000. Свяжитесь с поддержкой для крупных сделок.');
+    showErr('Максимальная сумма обмена — $100 000. Свяжитесь с поддержкой для крупных сделок.');
     updUSD(0,0); return;
   }
   showErr(null);
@@ -594,7 +594,7 @@ function calcTF(){
   const toUSD = ta * getP(toC);
   if(toUSD > MAX_USD){
     document.getElementById('fromAmt').value='';
-    showErr('Максимальная сумма обмена — $10 000 000. Свяжитесь с поддержкой для крупных сделок.');
+    showErr('Максимальная сумма обмена — $100 000. Свяжитесь с поддержкой для крупных сделок.');
     updUSD(0,0); return;
   }
   showErr(null);
