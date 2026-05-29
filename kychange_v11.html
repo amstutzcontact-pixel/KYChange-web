@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KYChange — Crypto Exchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F6FA;--card:#FFF;--primary:#1A1F3C;--accent:#F5C518;--ah:#E0B015;--blue:#5B6EF5;--green:#22C55E;--red:#EF4444;--muted:#6B7280;--light:#9CA3AF;--border:rgba(0,0,0,.08);--borderS:rgba(0,0,0,.15);--sh:0 4px 16px rgba(0,0,0,.08);--shL:0 20px 60px rgba(0,0,0,.14);--r:12px;--rs:8px;--rl:20px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;}
+.hdr{max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.25rem;font-weight:700;color:var(--primary);text-decoration:none;flex-shrink:0;}
+.logo-box{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--primary);}
+.logo em{color:var(--accent);font-style:normal;}
+nav{display:flex;align-items:center;gap:1.5rem;}
+nav a{font-size:.84rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s;white-space:nowrap;}
+nav a:hover{color:var(--primary);}
+.hdr-btns{display:flex;align-items:center;gap:.4rem;flex-shrink:0;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--rs);font-family:'Sora',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;text-decoration:none;white-space:nowrap;}
+.btn-y{background:var(--accent);color:var(--primary);}
+.btn-y:hover{background:var(--ah);transform:translateY(-1px);box-shadow:0 5px 16px rgba(245,197,24,.35);}
+.btn-o{background:transparent;color:var(--primary);border:1.5px solid var(--borderS);}
+.btn-o:hover{border-color:var(--primary);}
+
+/* TICKER */
+.ticker-wrap{padding:8px 0;background:var(--card);border-bottom:1px solid var(--border);overflow:hidden;}
+.ticker-track{display:flex;gap:2.5rem;animation:tick 35s linear infinite;width:max-content;}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.tc{display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.tc-i{width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;}
+.tc-code{font-size:.76rem;font-weight:600;}
+.tc-p{font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.tc-up{color:var(--green);font-size:.66rem;font-weight:600;}
+.tc-dn{color:var(--red);font-size:.66rem;font-weight:600;}
+
+/* HERO */
+.hero{padding:3.5rem 1.5rem 2rem;text-align:center;position:relative;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(245,197,24,.09),transparent);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,197,24,.15);border:1px solid rgba(245,197,24,.4);color:#8A6C00;font-size:.7rem;font-weight:700;padding:4px 13px;border-radius:100px;margin-bottom:1.1rem;letter-spacing:.04em;text-transform:uppercase;}
+.hero h1{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:700;line-height:1.15;margin-bottom:.75rem;}
+.hero h1 em{color:var(--accent);font-style:normal;}
+.hero p{font-size:.92rem;color:var(--muted);max-width:460px;margin:0 auto 2rem;line-height:1.7;}
+.stats{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap;}
+.sv{font-size:1.2rem;font-weight:700;}
+.sl{font-size:.66rem;color:var(--muted);margin-top:2px;}
+.sd{width:1px;height:32px;background:var(--border);}
+
+/* WIDGET */
+.w-wrap{max-width:480px;margin:0 auto 3rem;padding:0 1rem;}
+.widget{background:var(--card);border-radius:var(--rl);box-shadow:var(--shL);border:1px solid var(--border);overflow:hidden;}
+.wtabs{display:flex;padding:1rem 1.25rem 0;gap:.5rem;border-bottom:1px solid var(--border);overflow-x:auto;}
+.wtab{font-size:.76rem;font-weight:600;color:var(--muted);cursor:pointer;padding:7px 0;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sora',sans-serif;margin-right:.5rem;}
+.wtab.active{color:var(--primary);border-bottom-color:var(--accent);}
+.wbody{padding:1.25rem;}
+.crow{background:var(--bg);border-radius:var(--r);padding:.8rem .95rem;border:1.5px solid transparent;transition:border-color .2s;}
+.crow:focus-within{border-color:var(--accent);}
+.clabel{font-size:.63rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.cinner{display:flex;align-items:center;gap:.75rem;}
+.ainput{font-size:1.4rem;font-weight:700;font-family:'Sora',sans-serif;color:var(--primary);border:none;background:transparent;outline:none;width:100%;min-width:0;}
+.ainput::placeholder{color:var(--light);}
+.csel{display:flex;align-items:center;gap:6px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--rs);padding:6px 9px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.csel:hover{border-color:var(--primary);}
+.ci{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;flex-shrink:0;}
+.cc{font-size:.86rem;font-weight:700;}
+.cch{font-size:.6rem;color:var(--muted);}
+.uval{font-size:.66rem;color:var(--muted);margin-top:4px;}
+.swap-w{display:flex;align-items:center;justify-content:center;position:relative;margin:.5rem 0;}
+.swap-w::before{content:'';position:absolute;left:0;right:0;height:1px;background:var(--border);}
+.swap-btn{width:34px;height:34px;background:var(--card);border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;position:relative;z-index:1;font-size:.9rem;}
+.swap-btn:hover{border-color:var(--accent);background:var(--accent);transform:rotate(180deg);}
+.rrow{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;}
+.rl{font-size:.7rem;color:var(--muted);}
+.rv{font-size:.7rem;font-weight:600;color:var(--primary);font-family:'JetBrains Mono',monospace;}
+.exbtn{width:100%;padding:13px;background:var(--accent);color:var(--primary);border:none;border-radius:var(--r);font-size:.9rem;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;margin-top:.8rem;}
+.exbtn:hover{background:var(--ah);transform:translateY(-1px);box-shadow:0 8px 22px rgba(245,197,24,.38);}
+.sbadges{display:flex;align-items:center;justify-content:center;gap:.8rem;margin-top:.55rem;flex-wrap:wrap;}
+.sb{font-size:.63rem;color:var(--muted);}
+#rateStatus{font-size:.62rem;color:var(--green);text-align:right;padding-bottom:.25rem;}
+
+/* DROPDOWN */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;}
+.overlay.open{display:flex;}
+.dd-panel{background:var(--card);border-radius:var(--rl);width:100%;max-width:370px;max-height:80vh;display:flex;flex-direction:column;box-shadow:var(--shL);overflow:hidden;}
+.dd-head{padding:.95rem .95rem .6rem;border-bottom:1px solid var(--border);}
+.dd-ttl{font-size:.88rem;font-weight:700;margin-bottom:.55rem;}
+.dd-tabs{display:flex;gap:.3rem;margin-bottom:.55rem;}
+.dtab{font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:100px;cursor:pointer;color:var(--muted);background:var(--bg);transition:all .2s;border:none;font-family:'Sora',sans-serif;}
+.dtab.active{background:var(--primary);color:#fff;}
+.sw{position:relative;}
+.sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.78rem;pointer-events:none;}
+.sinp{width:100%;padding:8px 10px 8px 28px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);font-size:.82rem;font-family:'Sora',sans-serif;outline:none;color:var(--primary);transition:border-color .2s;}
+.sinp:focus{border-color:var(--accent);}
+.clist{overflow-y:auto;padding:.3rem;flex:1;}
+.citem{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:var(--rs);cursor:pointer;transition:background .15s;}
+.citem:hover{background:var(--bg);}
+.citem.sel{background:rgba(245,197,24,.1);}
+.cinm{font-size:.82rem;font-weight:600;}
+.cidet{font-size:.63rem;color:var(--muted);}
+.ciprice{font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:auto;flex-shrink:0;}
+
+/* ORDER FLOW */
+.oOvl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem;}
+.oOvl.open{display:flex;}
+.oPanel{background:var(--card);border-radius:var(--rl);width:100%;max-width:450px;max-height:92vh;overflow-y:auto;box-shadow:var(--shL);}
+.oHead{padding:1.1rem 1.1rem .85rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.oTtl{font-size:.95rem;font-weight:700;}
+.xbtn{width:26px;height:26px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--muted);transition:all .2s;}
+.xbtn:hover{background:var(--borderS);color:var(--primary);}
+.sbar{display:flex;align-items:center;padding:.9rem 1.1rem;gap:0;}
+.sdot{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;border:2px solid var(--border);color:var(--muted);background:var(--card);flex-shrink:0;transition:all .3s;}
+.sdot.active{border-color:var(--accent);background:var(--accent);color:var(--primary);}
+.sdot.done{border-color:var(--green);background:var(--green);color:#fff;}
+.sline{flex:1;height:2px;background:var(--border);transition:background .3s;}
+.sline.done{background:var(--green);}
+.obody{padding:1.1rem;}
+.osum{background:var(--bg);border-radius:var(--r);padding:.8rem .95rem;margin-bottom:1rem;}
+.osr{display:flex;align-items:center;justify-content:space-between;padding:2px 0;}
+.osl{font-size:.7rem;color:var(--muted);}
+.osv{font-size:.78rem;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.fg{margin-bottom:.9rem;}
+.fl{font-size:.74rem;font-weight:600;margin-bottom:4px;display:block;}
+.fi{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:.84rem;font-family:'Sora',sans-serif;color:var(--primary);background:var(--card);outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--accent);}
+.fh{font-size:.63rem;color:var(--muted);margin-top:3px;}
+.payinst{background:var(--bg);border-radius:var(--r);padding:1.1rem;text-align:center;margin-bottom:1rem;}
+.payinst h3{font-size:.88rem;font-weight:700;margin-bottom:.3rem;}
+.payinst p{font-size:.73rem;color:var(--muted);margin-bottom:.9rem;line-height:1.6;}
+#qrc{display:flex;justify-content:center;margin-bottom:.9rem;}
+#qrc canvas,#qrc img{border-radius:var(--rs);border:4px solid #fff;box-shadow:var(--sh);}
+.asend{font-size:1.3rem;font-weight:700;margin:.3rem 0;}
+.asend em{color:var(--accent);font-style:normal;}
+.abox{background:var(--card);border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 11px;display:flex;align-items:center;gap:6px;margin-bottom:.8rem;}
+.atxt{font-family:'JetBrains Mono',monospace;font-size:.66rem;word-break:break-all;flex:1;text-align:left;}
+.cpybtn{padding:4px 9px;background:var(--accent);border:none;border-radius:6px;font-size:.66rem;font-weight:600;cursor:pointer;color:var(--primary);white-space:nowrap;transition:all .2s;font-family:'Sora',sans-serif;}
+.cpybtn:hover{background:var(--ah);}
+.warnr{font-size:.66rem;color:var(--red);font-weight:600;}
+.bankrow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+.bankrow:last-child{border-bottom:none;}
+.bl{font-size:.7rem;color:var(--muted);}
+.bv{font-size:.78rem;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.ptabs{display:flex;gap:.4rem;margin-bottom:.9rem;}
+.ptab{flex:1;padding:8px;text-align:center;border-radius:var(--rs);border:1.5px solid var(--border);cursor:pointer;font-size:.76rem;font-weight:600;color:var(--muted);transition:all .2s;font-family:'Sora',sans-serif;background:var(--card);}
+.ptab.active{border-color:var(--accent);color:var(--primary);background:rgba(245,197,24,.07);}
+.cif{width:100%;padding:9px 11px 9px 36px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:.84rem;font-family:'JetBrains Mono',monospace;color:var(--primary);background:var(--card);outline:none;transition:border-color .2s;}
+.cif:focus{border-color:var(--blue);}
+.cifw{position:relative;}
+.cific{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;}
+.crow2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.o-btn{width:100%;padding:12px;background:var(--accent);color:var(--primary);border:none;border-radius:var(--r);font-size:.88rem;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;margin-top:.8rem;}
+.o-btn:hover{background:var(--ah);transform:translateY(-1px);}
+.sicoS{width:54px;height:54px;border-radius:50%;background:rgba(245,197,24,.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto .75rem;}
+.stl2{font-size:.92rem;font-weight:700;text-align:center;margin-bottom:.3rem;}
+.stxt2{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6;}
+.oidb{background:var(--bg);border-radius:var(--rs);padding:7px 11px;text-align:center;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--muted);}
+.oidb strong{color:var(--primary);}
+.pulse{display:inline-block;width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pls 1.5s infinite;margin-right:5px;}
+@keyframes pls{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.4);}}
+.timer{font-size:1rem;font-weight:700;font-family:'JetBrains Mono',monospace;text-align:center;margin:.3rem 0;}
+
+/* SECTIONS */
+.sec{padding:4rem 1.5rem;}
+.si{max-width:1080px;margin:0 auto;}
+.sbadge{display:inline-flex;align-items:center;gap:5px;background:rgba(91,110,245,.1);color:var(--blue);font-size:.66rem;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;}
+.stitle{font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;margin-bottom:.6rem;line-height:1.2;}
+.ssub{font-size:.88rem;color:var(--muted);max-width:420px;line-height:1.7;margin-bottom:2rem;}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1rem;}
+.scard{background:var(--card);border-radius:var(--r);padding:1.4rem;border:1px solid var(--border);transition:box-shadow .2s,transform .2s;}
+.scard:hover{box-shadow:var(--sh);transform:translateY(-2px);}
+.snum{font-size:1.5rem;font-weight:700;color:rgba(245,197,24,.2);font-family:'JetBrains Mono',monospace;margin-bottom:.65rem;line-height:1;}
+.sico2{font-size:1.25rem;margin-bottom:.55rem;}
+.sttl{font-size:.86rem;font-weight:700;margin-bottom:.3rem;}
+.sdsc{font-size:.73rem;color:var(--muted);line-height:1.6;}
+.dbg{background:var(--primary);}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:1rem;}
+.fcard{padding:1.25rem;border:1px solid rgba(255,255,255,.07);border-radius:var(--r);transition:border-color .2s;}
+.fcard:hover{border-color:rgba(245,197,24,.4);}
+.fttl{font-size:.83rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+.fdsc{font-size:.7rem;color:rgba(255,255,255,.4);line-height:1.6;}
+.dbg .stitle{color:#fff;}
+.dbg .ssub{color:rgba(255,255,255,.5);}
+.dbg .sbadge{background:rgba(245,197,24,.15);color:var(--accent);}
+
+/* COINS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.55rem;margin-top:1.5rem;}
+.cpill{display:flex;align-items:center;gap:7px;padding:.6rem .8rem;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border);transition:all .2s;}
+.cpill:hover{border-color:var(--accent);background:rgba(245,197,24,.05);}
+.cpico{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0;}
+.cpc{font-size:.76rem;font-weight:700;}
+.cpn{font-size:.6rem;color:var(--muted);}
+
+/* FAQ */
+.faqlist{margin-top:1.5rem;max-width:660px;}
+.faqitem{border-bottom:1px solid var(--border);}
+.faqq{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0;cursor:pointer;font-size:.86rem;font-weight:600;gap:.75rem;}
+.faqa-arr{font-size:.63rem;color:var(--muted);transition:transform .3s;flex-shrink:0;}
+.faqitem.open .faqa-arr{transform:rotate(180deg);}
+.faqans{font-size:.78rem;color:var(--muted);line-height:1.7;padding-bottom:.85rem;display:none;}
+.faqitem.open .faqans{display:block;}
+
+/* SUPPORT */
+.support-grid{display:flex;align-items:center;justify-content:center;gap:1.1rem;flex-wrap:wrap;margin-top:2rem;}
+.contact-card{display:flex;flex-direction:column;align-items:center;gap:.45rem;padding:1.5rem 2.25rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);text-decoration:none;transition:all .2s;}
+.contact-card:hover{background:rgba(245,197,24,.12);border-color:rgba(245,197,24,.4);transform:translateY(-2px);}
+.cc-ico{font-size:1.75rem;}
+.cc-ttl{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;}
+.cc-val{font-size:.88rem;font-weight:600;color:#fff;}
+.tg-btn{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;background:var(--accent);color:var(--primary);border-radius:var(--r);font-weight:700;font-size:.9rem;text-decoration:none;transition:all .2s;margin-top:1.75rem;}
+.tg-btn:hover{background:var(--ah);transform:translateY(-1px);}
+
+/* FOOTER */
+footer{background:var(--primary);padding:3rem 1.5rem 1.5rem;color:rgba(255,255,255,.6);}
+.fi2{max-width:1080px;margin:0 auto;}
+.ftop{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:2rem;margin-bottom:2rem;}
+.fdesc{font-size:.73rem;color:rgba(255,255,255,.4);line-height:1.7;margin:.7rem 0 1rem;}
+.fsocial{display:flex;gap:.45rem;}
+.fsoc{width:30px;height:30px;background:rgba(255,255,255,.07);border-radius:7px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;transition:background .2s;}
+.fsoc:hover{background:rgba(245,197,24,.25);}
+.fct{font-size:.7rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;}
+.fcol a{display:block;font-size:.73rem;color:rgba(255,255,255,.4);text-decoration:none;margin-bottom:.4rem;transition:color .2s;}
+.fcol a:hover{color:var(--accent);}
+.fbot{border-top:1px solid rgba(255,255,255,.07);padding-top:1.1rem;display:flex;align-items:center;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.28);}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--primary);color:#fff;padding:9px 15px;border-radius:var(--rs);font-size:.78rem;font-weight:500;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;box-shadow:var(--shL);pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .ftop{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  nav{display:none;}
+  .hdr-btns .btn-o{display:none;}
+  .btn-y{padding:7px 12px;font-size:.78rem;}
+  .ftop{grid-template-columns:1fr;}
+  .stats{gap:.9rem;}
+  .sd{display:none;}
+  .hero{padding:2.5rem 1rem 1.5rem;}
+  .w-wrap{padding:0 .75rem;}
+  .sec{padding:3rem 1rem;}
+}
+@media(max-width:380px){
+  .btn-y{padding:6px 10px;font-size:.74rem;}
+  .logo{font-size:1.1rem;}
+  .logo-box{width:28px;height:28px;font-size:.8rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a href="#" class="logo"><div class="logo-box">K</div>KY<em>Change</em></a>
+    <nav>
+      <a href="#how">Как работает</a>
+      <a href="#coins">Валюты</a>
+      <a href="#faq">FAQ</a>
+      <a href="#support">Поддержка</a>
+    </nav>
+    <div class="hdr-btns">
+      <a href="https://t.me/kychangebot" target="_blank" class="btn btn-o">✈ Telegram</a>
+      <button class="btn btn-y" onclick="scrollToWidget()">Обменять</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-track" id="ticker"></div></div>
+
+<section class="hero">
+  <div class="hero-badge">⚡ Мгновенный обмен · Без регистрации</div>
+  <h1>Крипто-обмен без<br><em>лишних шагов</em></h1>
+  <p>USDT, ETH, BNB, SOL, TON, LTC, TRX и фиат. Лучший курс, без регистрации.</p>
+  <div class="stats">
+    <div><div class="sv">8</div><div class="sl">Криптовалют</div></div>
+    <div class="sd"></div>
+    <div><div class="sv">~10 мин</div><div class="sl">Время обмена</div></div>
+    <div class="sd"></div>
+    <div><div class="sv">1.2%</div><div class="sl">Комиссия</div></div>
+    <div class="sd"></div>
+    <div><div class="sv">24/7</div><div class="sl">Поддержка</div></div>
+  </div>
+
+  <!-- WIDGET -->
+  <div class="w-wrap" id="widget">
+    <div class="widget">
+      <div class="wtabs">
+        <button class="wtab active" onclick="setTab(this,'all')">Все пары</button>
+        <button class="wtab" onclick="setTab(this,'cc')">Крипто → Крипто</button>
+        <button class="wtab" onclick="setTab(this,'cf')">Крипто ↔ Фиат</button>
+      </div>
+      <div class="wbody">
+        <div class="crow">
+          <div class="clabel">Отдаёте</div>
+          <div class="cinner">
+            <input class="ainput" type="text" inputmode="decimal" id="fromAmt" placeholder="0.00">
+            <div class="csel" onclick="openDD('from')">
+              <div class="ci" id="fromIcon" style="background:#627EEA">Ξ</div>
+              <div><div class="cc" id="fromCode">ETH</div><div class="cch" id="fromChain">ERC-20</div></div>
+              <span style="color:var(--muted);font-size:.6rem;margin-left:2px;">▾</span>
+            </div>
+          </div>
+          <div class="uval" id="fromUsd">≈ $0.00</div>
+        </div>
+
+        <div class="swap-w">
+          <button class="swap-btn" onclick="swapCur()" title="Поменять">⇅</button>
+        </div>
+
+        <div class="crow">
+          <div class="clabel">Получаете</div>
+          <div class="cinner">
+            <input class="ainput" type="text" inputmode="decimal" id="toAmt" placeholder="0.00">
+            <div class="csel" onclick="openDD('to')">
+              <div class="ci" id="toIcon" style="background:#005BBB">₴</div>
+              <div><div class="cc" id="toCode">UAH</div><div class="cch" id="toChain">Украина</div></div>
+              <span style="color:var(--muted);font-size:.6rem;margin-left:2px;">▾</span>
+            </div>
+          </div>
+          <div class="uval" id="toUsd">≈ $0.00</div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);margin-top:.4rem;">
+          <div class="rrow"><span class="rl">💱 Курс</span><span class="rv" id="rateDisp">—</span></div>
+          <div class="rrow" style="padding-top:0;border-top:none;padding-bottom:.25rem;"><span class="rl">⏱ Время</span><span class="rv" style="font-family:'Sora';color:var(--green);">~5–15 мин</span></div>
+          <div id="rateStatus" style="text-align:right;font-size:.62rem;color:var(--muted);padding-bottom:.2rem;">⏳ Загружаем курсы...</div>
+        </div>
+
+        <div id="calcErr" style="display:none;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;padding:9px 12px;font-size:.75rem;font-weight:500;margin-top:.6rem;line-height:1.5;"></div>
+        <button class="exbtn" onclick="startEx()">Обменять →</button>
+        <div class="sbadges">
+          <div class="sb">🔒 SSL</div>
+          <div class="sb">✅ Без KYC</div>
+          <div class="sb">💸 Честный курс</div>
+          <div class="sb">🛡️ AML</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec" id="how" style="background:var(--card);">
+  <div class="si">
+    <div class="sbadge">📋 Процесс</div>
+    <div class="stitle">Как это работает</div>
+    <div class="ssub">Обмен в 4 шага, без регистрации и верификации</div>
+    <div class="sgrid">
+      <div class="scard"><div class="snum">01</div><div class="sico2">🎯</div><div class="sttl">Выберите пару</div><div class="sdsc">Укажите валюту которую отдаёте и получаете. Система рассчитает курс автоматически.</div></div>
+      <div class="scard"><div class="snum">02</div><div class="sico2">📋</div><div class="sttl">Укажите реквизиты</div><div class="sdsc">Введите адрес кошелька для крипты или карту / IBAN для фиата.</div></div>
+      <div class="scard"><div class="snum">03</div><div class="sico2">💸</div><div class="sttl">Отправьте оплату</div><div class="sdsc">Переведите крипту на наш QR-адрес или оплатите банковским переводом / картой.</div></div>
+      <div class="scard"><div class="snum">04</div><div class="sico2">✅</div><div class="sttl">Получите средства</div><div class="sdsc">После подтверждения средства поступят на ваш адрес или карту за 5–30 минут.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec dbg">
+  <div class="si">
+    <div class="sbadge">🛡️ Преимущества</div>
+    <div class="stitle">Почему KYChange</div>
+    <div class="ssub">Безопасно, прозрачно, без лишних формальностей</div>
+    <div class="fgrid">
+      <div class="fcard"><div class="sico2">⚡</div><div class="fttl">Быстрый обмен</div><div class="fdsc">Большинство операций за 5–15 минут</div></div>
+      <div class="fcard"><div class="sico2">🔒</div><div class="fttl">Без регистрации</div><div class="fdsc">Не нужен аккаунт. Никаких личных данных</div></div>
+      <div class="fcard"><div class="sico2">💎</div><div class="fttl">Честный курс</div><div class="fdsc">Реальные курсы с бирж. Видите цену до оплаты</div></div>
+      <div class="fcard"><div class="sico2">🌍</div><div class="fttl">8 криптовалют</div><div class="fdsc">USDT TRC/BEP, TRX, SOL, LTC, ETH, TON, BNB</div></div>
+      <div class="fcard"><div class="sico2">🎧</div><div class="fttl">Поддержка 24/7</div><div class="fdsc">Telegram и email. Ответ за 15 минут</div></div>
+      <div class="fcard"><div class="sico2">🏦</div><div class="fttl">Банковский перевод</div><div class="fdsc">IBAN, SWIFT перевод в UAH, EUR, USD, PLN, HUF, RUB</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COINS -->
+<section class="sec" id="coins" style="background:var(--card);">
+  <div class="si">
+    <div class="sbadge">🪙 Валюты</div>
+    <div class="stitle">Поддерживаемые валюты</div>
+    <div class="ssub">8 криптовалют + 6 фиатных валют для обмена</div>
+    <div class="cgrid" id="coinsGrid"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="si">
+    <div class="sbadge">❓ FAQ</div>
+    <div class="stitle">Частые вопросы</div>
+    <div class="faqlist" id="faqList"></div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section class="sec dbg" id="support">
+  <div class="si" style="text-align:center;">
+    <div class="sbadge">🎧 Поддержка</div>
+    <div class="stitle">Нужна помощь?</div>
+    <div class="ssub" style="margin:0 auto;color:rgba(255,255,255,.5);">Мы всегда на связи — напишите любым удобным способом</div>
+    <div class="support-grid">
+      <a href="mailto:Support@kychange.pro" class="contact-card">
+        <div class="cc-ico">📧</div>
+        <div class="cc-ttl">Email</div>
+        <div class="cc-val">Support@kychange.pro</div>
+      </a>
+      <a href="https://t.me/kychangebot" target="_blank" class="contact-card">
+        <div class="cc-ico">✈️</div>
+        <div class="cc-ttl">Telegram Bot</div>
+        <div class="cc-val">@kychangebot</div>
+      </a>
+    </div>
+    <a href="https://t.me/kychangebot" target="_blank" class="tg-btn">✈ Написать в Telegram</a>
+  </div>
+</section>
+
+<section style="padding:3rem 1.5rem;text-align:center;background:var(--bg);">
+  <div style="max-width:460px;margin:0 auto;">
+    <div style="font-size:1.6rem;margin-bottom:.6rem;">⚡</div>
+    <div style="font-size:1.4rem;font-weight:700;margin-bottom:.6rem;">Готовы обменять?</div>
+    <div style="font-size:.86rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Без регистрации. Выберите пару и получите деньги.</div>
+    <button class="btn btn-y" style="font-size:.9rem;padding:12px 28px;" onclick="scrollToWidget()">Начать обмен →</button>
+  </div>
+</section>
+
+<footer>
+  <div class="fi2">
+    <div class="ftop">
+      <div>
+        <a href="#" class="logo" style="color:#fff;display:inline-flex;"><div class="logo-box">K</div>KY<em>Change</em></a>
+        <div class="fdesc">Быстрый крипто-обменник. Без регистрации. Прозрачные комиссии.</div>
+        <div class="fsocial">
+          <a href="https://t.me/kychangebot" target="_blank" class="fsoc">✈</a>
+          <a href="mailto:Support@kychange.pro" class="fsoc">@</a>
+        </div>
+      </div>
+      <div class="fcol"><div class="fct">Обмен</div><a href="#">Крипто → Крипто</a><a href="#">Крипто → Фиат</a><a href="#">Фиат → Крипто</a></div>
+      <div class="fcol"><div class="fct">Компания</div><a href="#">О нас</a><a href="#">AML политика</a><a href="#">Правила</a></div>
+      <div class="fcol"><div class="fct">Помощь</div><a href="https://t.me/kychangebot" target="_blank">Telegram</a><a href="mailto:Support@kychange.pro">Email</a><a href="#faq">FAQ</a></div>
+    </div>
+    <div class="fbot"><span>© 2025 KYChange. Все права защищены.</span><span>🔒 SSL · AML · PCI DSS</span></div>
+  </div>
+</footer>
+
+<!-- DROPDOWN -->
+<div class="overlay" id="ddOverlay" onclick="closeDD()">
+  <div class="dd-panel" onclick="event.stopPropagation()">
+    <div class="dd-head">
+      <div class="dd-ttl">Выберите валюту</div>
+      <div class="dd-tabs">
+        <button class="dtab active" data-f="all" onclick="filterDD('all',this)">Все</button>
+        <button class="dtab" data-f="crypto" onclick="filterDD('crypto',this)">Крипто</button>
+        <button class="dtab" data-f="fiat" onclick="filterDD('fiat',this)">Фиат</button>
+      </div>
+      <div class="sw">
+        <span class="sico">🔍</span>
+        <input class="sinp" id="ddSearch" type="text" placeholder="USDT, ETH, гривна..." oninput="filterList()">
+      </div>
+    </div>
+    <div class="clist" id="curList"></div>
+  </div>
+</div>
+
+<!-- ORDER -->
+<div class="oOvl" id="oOvl">
+  <div class="oPanel" onclick="event.stopPropagation()">
+    <div class="oHead">
+      <div class="oTtl" id="oTtl">Детали обмена</div>
+      <button class="xbtn" onclick="closeOrder()">✕</button>
+    </div>
+    <div class="sbar">
+      <div class="sdot active" id="sd1">1</div><div class="sline" id="sl1"></div>
+      <div class="sdot" id="sd2">2</div><div class="sline" id="sl2"></div>
+      <div class="sdot" id="sd3">3</div>
+    </div>
+    <div class="obody" id="oBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const SPREAD = 0.07;   // 7% — наценка клиенту (встроена в курс)
+const FEE    = 0.012;  // 1.2% — комиссия сервиса (отображается)
+const factor = () => (1 - SPREAD) * (1 - FEE); // ≈ 0.919
+
+// ── CURRENCIES ──────────────────────────────────────────
+const CRYPTO = [
+  {id:'USDT_T',name:'Tether TRC-20', code:'USDT',chain:'TRC-20', color:'#26A17B',ico:'₮',usd:1.0,  cgId:'tether',          type:'crypto',addr:'TYsbWxNnyJHCECSmRPTCQuMBpZeyUhqPXD'},
+  {id:'USDT_B',name:'Tether BEP-20', code:'USDT',chain:'BEP-20', color:'#26A17B',ico:'₮',usd:1.0,  cgId:'tether',          type:'crypto',addr:'0x55d398326f99059fF775485246999027B3197955'},
+  {id:'TRX',   name:'TRON',          code:'TRX', chain:'TRON',   color:'#FF0013',ico:'T',usd:0.13, cgId:'tron',            type:'crypto',addr:'TGj1Ej1qRzL9feLTLhjwgxXF4Ct6GTWg2U'},
+  {id:'SOL',   name:'Solana',        code:'SOL', chain:'Solana', color:'#9945FF',ico:'◎',usd:155,  cgId:'solana',          type:'crypto',addr:'7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV'},
+  {id:'LTC',   name:'Litecoin',      code:'LTC', chain:'LTC',    color:'#A6A9AA',ico:'Ł',usd:82,   cgId:'litecoin',        type:'crypto',addr:'LZ9a8bqGcX7EXbM3JN7KWx7VbmHLnJEJoJ'},
+  {id:'ETH',   name:'Ethereum',      code:'ETH', chain:'ERC-20', color:'#627EEA',ico:'Ξ',usd:3100, cgId:'ethereum',        type:'crypto',addr:'0x71C7656EC7ab88b098defB751B7401B5f6d8976F'},
+  {id:'TON',   name:'Toncoin',       code:'TON', chain:'TON',    color:'#0098EA',ico:'T',usd:6.5,  cgId:'the-open-network',type:'crypto',addr:'UQBvW8Y5FfNd-t9HQHmKAQRpJO3yGHmBZJ3AXUSR8'},
+  {id:'BNB',   name:'BNB',           code:'BNB', chain:'BEP-20', color:'#F3BA2F',ico:'B',usd:580,  cgId:'binancecoin',     type:'crypto',addr:'0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE'},
+];
+const FIAT = [
+  {id:'UAH',name:'Гривна',  code:'UAH',chain:'Украина',     color:'#005BBB',ico:'₴', usd:0.0253, fxCode:'UAH',type:'fiat'},
+  {id:'EUR',name:'Евро',    code:'EUR',chain:'Еврозона',    color:'#003399',ico:'€', usd:1.087,  fxCode:'EUR',type:'fiat'},
+  {id:'PLN',name:'Злотый',  code:'PLN',chain:'Польша',      color:'#DC143C',ico:'zł',usd:0.25,   fxCode:'PLN',type:'fiat'},
+  {id:'USD',name:'Доллар',  code:'USD',chain:'США',         color:'#2C7BE5',ico:'$', usd:1.0,    fxCode:'USD',type:'fiat'},
+  {id:'HUF',name:'Форинт',  code:'HUF',chain:'Венгрия',    color:'#CE2939',ico:'Ft',usd:0.0028, fxCode:'HUF',type:'fiat'},
+  {id:'RUB',name:'Рубль',   code:'RUB',chain:'Россия',     color:'#CC0000',ico:'₽', usd:0.011,  fxCode:'RUB',type:'fiat'},
+];
+const ALL = [...CRYPTO, ...FIAT];
+
+const BANK = {
+  UAH:{bank:'ПриватБанк',  swift:'PBANUA2X', card:'4246 0010 1234 5678', iban:'UA21 3052 9900 0026 0070 3352 6900', name:'KYChange ТОВ'},
+  EUR:{bank:'Deutsche Bank',swift:'DEUTDEDB', iban:'DE89 3704 0044 0532 0130 00', name:'KYChange Ltd'},
+  PLN:{bank:'PKO Bank',     swift:'BPKOPLPW', iban:'PL61 1090 1014 0000 0712 1981 2874', name:'KYChange Ltd'},
+  USD:{bank:'JPMorgan',     swift:'CHASUS33', iban:'US64 JPMC 1234 5678 9012 34', name:'KYChange Ltd'},
+  HUF:{bank:'OTP Bank',     swift:'OTPVHUHB', iban:'HU42 1177 3016 1111 1018 0000 0000', name:'KYChange Ltd'},
+  RUB:{bank:'Тинькофф',    swift:'TICSRUMM', card:'2200 7001 1234 5678', name:'KYChange Ltd'},
+};
+
+// ── STATE ────────────────────────────────────────────────
+const prices = {};
+ALL.forEach(c => prices[c.id] = c.usd);
+const getP = c => prices[c.id] || c.usd || 1;
+
+let fromC = CRYPTO[5]; // ETH  (default)
+let toC   = FIAT[0];   // UAH  (default)
+let activeTab = 'all';
+let curDD = 'from';
+let ddFilter = 'all';
+let oData = {};
+
+// ── API ───────────────────────────────────────────────────
+async function fetchRates(){
+  const el = document.getElementById('rateStatus');
+  try{
+    const cgIds = [...new Set(CRYPTO.map(c=>c.cgId))].join(',');
+    const [r1,r2] = await Promise.all([
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids='+cgIds+'&vs_currencies=usd'),
+      fetch('https://open.er-api.com/v6/latest/USD')
+    ]);
+    if(r1.ok){
+      const d = await r1.json();
+      CRYPTO.forEach(c=>{ if(d[c.cgId]?.usd) prices[c.id]=d[c.cgId].usd; });
+    }
+    if(r2.ok){
+      const d = await r2.json();
+      FIAT.forEach(c=>{
+        if(c.fxCode==='USD'){prices[c.id]=1;return;}
+        if(d.rates?.[c.fxCode]) prices[c.id]=1/d.rates[c.fxCode];
+      });
+    }
+    if(el) el.textContent='🟢 Курс в реальном времени';
+    buildTicker(); calcFT();
+  }catch(e){
+    if(el) el.textContent='🟡 Резервный курс';
+  }
+  setTimeout(fetchRates,30000);
+}
+
+// ── CALCULATION ───────────────────────────────────────────
+const MAX_USD = 100000;
+
+function showErr(msg){
+  const el = document.getElementById('calcErr');
+  if(!el) return;
+  if(msg){ el.textContent = '⚠️ ' + msg; el.style.display = 'block'; }
+  else    { el.style.display = 'none'; }
+}
+
+// Called when user edits FROM field
+function calcFT(){
+  const raw = document.getElementById('fromAmt').value.replace(/[^0-9.]/g,'');
+  const fa  = parseFloat(raw) || 0;
+  showErr(null);
+  if(fa <= 0){
+    document.getElementById('toAmt').value = '';
+    updUSD(0,0); updRate(); return;
+  }
+  const fromUSD = fa * getP(fromC);
+  if(fromUSD > MAX_USD){
+    document.getElementById('toAmt').value = '';
+    showErr('Максимальная сумма — $100 000. Для крупных сделок свяжитесь с поддержкой.');
+    updUSD(0,0); return;
+  }
+  const ta = fromUSD / getP(toC) * factor();
+  document.getElementById('toAmt').value = fmt(ta);
+  updUSD(fromUSD, ta * getP(toC));
+  updRate();
+}
+
+// Called when user edits TO field
+function calcTF(){
+  const raw = document.getElementById('toAmt').value.replace(/[^0-9.]/g,'');
+  const ta  = parseFloat(raw) || 0;
+  showErr(null);
+  if(ta <= 0){
+    document.getElementById('fromAmt').value = '';
+    updUSD(0,0); updRate(); return;
+  }
+  const toUSD = ta * getP(toC);
+  if(toUSD > MAX_USD){
+    document.getElementById('fromAmt').value = '';
+    showErr('Максимальная сумма — $100 000. Для крупных сделок свяжитесь с поддержкой.');
+    updUSD(0,0); return;
+  }
+  const fa = toUSD / getP(fromC) / factor();
+  document.getElementById('fromAmt').value = fmt(fa);
+  updUSD(fa * getP(fromC), toUSD);
+  updRate();
+}
+
+function updUSD(fu,tu){
+  document.getElementById('fromUsd').textContent='≈ $'+fmt(fu);
+  document.getElementById('toUsd').textContent='≈ $'+fmt(tu);
+}
+function updRate(){
+  const r = getP(fromC)/getP(toC)*factor();
+  document.getElementById('rateDisp').textContent=`1 ${fromC.code} (${fromC.chain}) = ${fmt(r)} ${toC.code}`;
+}
+
+function fmt(n){
+  if(!n||isNaN(n)||n===0) return '0';
+  if(Math.abs(n)<0.000001) return n.toExponential(4);
+  if(Math.abs(n)<0.001)  return n.toFixed(6);
+  if(Math.abs(n)<1)      return n.toFixed(4);
+  if(Math.abs(n)<1000)   return parseFloat(n.toFixed(4)).toString();
+  if(Math.abs(n)<100000) return parseFloat(n.toFixed(2)).toString();
+  return Math.round(n).toString(); // NO toLocaleString — commas break type="number" inputs
+}
+
+// ── UI ────────────────────────────────────────────────────
+function updUI(side,c){
+  const ico=document.getElementById(side+'Icon');
+  if(ico){ico.style.background=c.color;ico.textContent=(c.ico||'').length>2?c.code[0]:(c.ico||c.code[0]);}
+  const cd=document.getElementById(side+'Code'); if(cd) cd.textContent=c.code;
+  const ch=document.getElementById(side+'Chain'); if(ch) ch.textContent=c.chain;
+}
+function scrollToWidget(){ document.getElementById('widget').scrollIntoView({behavior:'smooth'}); }
+
+// ── TABS ─────────────────────────────────────────────────
+function setTab(el,tab){
+  document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  activeTab=tab;
+  if(tab==='cc'){
+    // Both must be crypto
+    if(fromC.type!=='crypto') fromC=CRYPTO[5];
+    if(toC.type!=='crypto')   toC=CRYPTO[0];
+  } else if(tab==='cf'){
+    // One must be crypto, other fiat
+    if(fromC.type==='fiat'&&toC.type==='fiat'){ fromC=CRYPTO[5]; toC=FIAT[0]; }
+    else if(fromC.type==='crypto'&&toC.type==='crypto') toC=FIAT[0];
+  }
+  // 'all' — no restriction
+  updUI('from',fromC); updUI('to',toC); calcFT();
+}
+
+function getFromList(){
+  if(activeTab==='cc') return CRYPTO;
+  return ALL; // 'cf' and 'all' allow both sides
+}
+function getToList(){
+  if(activeTab==='cc') return CRYPTO.filter(c=>c.id!==fromC.id);
+  if(activeTab==='cf'){
+    // opposite type of fromC
+    return fromC.type==='crypto'?FIAT:CRYPTO;
+  }
+  return ALL.filter(c=>c.id!==fromC.id);
+}
+
+// ── DROPDOWN ─────────────────────────────────────────────
+function openDD(side){
+  curDD=side; ddFilter='all';
+  document.querySelectorAll('.dtab').forEach(t=>{t.classList.remove('active');if(t.dataset.f==='all')t.classList.add('active');});
+  document.getElementById('ddSearch').value='';
+  renderList(side==='from'?getFromList():getToList());
+  document.getElementById('ddOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('ddSearch').focus(),120);
+}
+function closeDD(){ document.getElementById('ddOverlay').classList.remove('open'); }
+function filterDD(f,el){
+  ddFilter=f;
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); filterList();
+}
+function filterList(){
+  const q=document.getElementById('ddSearch').value.toLowerCase();
+  let list=curDD==='from'?getFromList():getToList();
+  if(ddFilter==='crypto') list=list.filter(c=>c.type==='crypto');
+  if(ddFilter==='fiat')   list=list.filter(c=>c.type==='fiat');
+  if(q) list=list.filter(c=>c.name.toLowerCase().includes(q)||c.code.toLowerCase().includes(q)||c.chain.toLowerCase().includes(q));
+  renderList(list);
+}
+function renderList(list){
+  const selId=curDD==='from'?fromC.id:toC.id;
+  document.getElementById('curList').innerHTML=list.map(c=>`
+    <div class="citem${c.id===selId?' sel':''}" onclick="selCur('${c.id}')">
+      <div class="ci" style="background:${c.color}">${(c.ico||'').length>2?c.code[0]:(c.ico||c.code[0])}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="cinm">${c.code} <span style="font-weight:400;color:var(--muted);font-size:.76rem;">${c.name}</span></div>
+        <div class="cidet">${c.chain}${c.type==='fiat'?' · Фиат':''}</div>
+      </div>
+      <div class="ciprice">${c.type==='fiat'?c.ico:'$'+fmt(getP(c))}</div>
+    </div>`).join('');
+}
+function selCur(id){
+  const c=ALL.find(x=>x.id===id); if(!c) return;
+  if(curDD==='from'){
+    fromC=c; updUI('from',c);
+    // Auto-adjust TO for cf tab
+    if(activeTab==='cf'){
+      const need=c.type==='crypto'?'fiat':'crypto';
+      if(toC.type!==need){ toC=need==='fiat'?FIAT[0]:CRYPTO[0]; updUI('to',toC); }
+    }
+    // Avoid same currency in cc tab
+    if(activeTab==='cc'&&toC.id===c.id){ toC=CRYPTO.find(x=>x.id!==c.id)||CRYPTO[1]; updUI('to',toC); }
+  } else {
+    toC=c; updUI('to',c);
+    if(activeTab==='cf'){
+      const need=c.type==='crypto'?'fiat':'crypto';
+      if(fromC.type!==need){ fromC=need==='fiat'?FIAT[0]:CRYPTO[0]; updUI('from',fromC); }
+    }
+  }
+  closeDD(); calcFT();
+}
+function swapCur(){
+  if(activeTab==='cc'&&(fromC.type!=='crypto'||toC.type!=='crypto')) return;
+  const t=fromC; fromC=toC; toC=t;
+  updUI('from',fromC); updUI('to',toC); calcFT();
+}
+
+// ── ORDER FLOW ───────────────────────────────────────────
+function startEx(){
+  const fa=parseFloat(document.getElementById('fromAmt').value);
+  if(!fa||fa<=0){showToast('⚠️ Введите сумму');return;}
+  const ta=parseFloat(document.getElementById('toAmt').value)||0;
+  oData={fa,ta,fromC,toC};
+  setStep(1); document.getElementById('oOvl').classList.add('open');
+}
+function closeOrder(){ document.getElementById('oOvl').classList.remove('open'); }
+
+function setStep(s){
+  for(let i=1;i<=3;i++){
+    const d=document.getElementById('sd'+i); d.className='sdot';
+    if(i<s){d.classList.add('done');d.textContent='✓';}
+    else if(i===s){d.classList.add('active');d.textContent=i;}
+    else d.textContent=i;
+    if(i<3) document.getElementById('sl'+i).className='sline'+(i<s?' done':'');
+  }
+  const B=document.getElementById('oBody');
+  if(s===1){
+    document.getElementById('oTtl').textContent='Детали обмена';
+    const isFT=oData.toC.type==='fiat';
+    B.innerHTML=`
+      <div class="osum">
+        <div class="osr"><span class="osl">Отдаёте</span><span class="osv">${fmt(oData.fa)} ${oData.fromC.code} (${oData.fromC.chain})</span></div>
+        <div class="osr"><span class="osl">Получаете ≈</span><span class="osv">${fmt(oData.ta)} ${oData.toC.code}</span></div>
+        <div class="osr"><span class="osl">Комиссия</span><span class="osv">1.2%</span></div>
+        <div class="osr"><span class="osl">Сеть получения</span><span class="osv" style="font-family:'Sora';">${oData.toC.chain}</span></div>
+      </div>
+      <div class="fg">
+        <label class="fl">${isFT?'💳 Карта / IBAN получателя':'📬 Адрес кошелька '+oData.toC.code+' ('+oData.toC.chain+')'}</label>
+        <input class="fi" type="text" id="recipInp" placeholder="${isFT?'UA21 3052... или 4149 ...':oData.toC.chain+' адрес...'}">
+        <div class="fh">${isFT?'IBAN, номер карты или счёт':'Адрес должен соответствовать сети '+oData.toC.chain}</div>
+      </div>
+      ${isFT?`<div class="fg"><label class="fl">👤 Имя получателя</label><input class="fi" type="text" id="recName" placeholder="Иван Иванов"></div>`:''}
+      <div class="fg">
+        <label class="fl">📧 Email для уведомлений (необязательно)</label>
+        <input class="fi" type="email" id="emailInp" placeholder="your@email.com">
+      </div>
+      <button class="o-btn" onclick="goS2()">Продолжить →</button>`;
+  }
+  else if(s===2){
+    document.getElementById('oTtl').textContent='Оплата';
+    if(oData.fromC.type!=='fiat') renderCryptoPay(B);
+    else renderFiatPay(B);
+  }
+  else if(s===3){
+    document.getElementById('oTtl').textContent='Ожидание';
+    // Generate unique order ID
+    const ts   = Date.now().toString(36).toUpperCase();
+    const rnd  = Math.random().toString(36).substr(2,5).toUpperCase();
+    const oid  = 'KYC-' + ts + '-' + rnd;
+    oData.oid  = oid;
+
+
+    B.innerHTML=`
+      <div style="text-align:center;padding:.5rem 0 0;">
+        <div class="sicoS">⏳</div>
+        <div class="stl2">Ожидаем вашу оплату</div>
+        <div class="stxt2">После подтверждения перевод выполнится автоматически</div>
+        <div class="oidb">Номер заявки: <strong>${oid}</strong></div>
+        <div style="background:var(--bg);border-radius:8px;padding:.65rem 1rem;margin:.75rem 0;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:.72rem;color:var(--muted);">🔍 Время проверки оплаты</span>
+          <span class="timer" id="chkTimer" style="font-size:.95rem;">60:00</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:5px;font-size:.72rem;color:var(--muted);margin:.5rem 0 .9rem;">
+          <span class="pulse"></span>Мониторим поступление...
+        </div>
+      </div>
+      <div class="osum">
+        <div class="osr"><span class="osl">Отдаёте</span><span class="osv">${fmt(oData.fa)} ${oData.fromC.code} (${oData.fromC.chain})</span></div>
+        <div class="osr"><span class="osl">Получаете</span><span class="osv">${fmt(oData.ta)} ${oData.toC.code}</span></div>
+        <div class="osr"><span class="osl">Реквизиты получателя</span><span class="osv" style="font-size:.65rem;max-width:180px;text-align:right;word-break:break-all;">${oData.recip||'—'}</span></div>
+        <div class="osr"><span class="osl">Номер заявки</span><span class="osv">${oid}</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.85rem;">
+        <button class="o-btn" style="margin-top:0;" onclick="refreshStatus('${oid}')">🔄 Обновить статус</button>
+        <a href="https://t.me/kychangebot?start=${oid}" target="_blank" class="o-btn" style="margin-top:0;background:#0098EA;color:#fff;text-align:center;text-decoration:none;display:block;padding:12px;border-radius:var(--r);font-size:.88rem;font-weight:700;">✈ Написать в поддержку</a>
+        <button class="o-btn" style="margin-top:0;background:var(--primary);color:#fff;" onclick="closeOrder();showToast('✅ Заявка #${oid} принята!')">Закрыть</button>
+      </div>`;
+
+    // Only check timer on step 3
+    const chkEl = document.getElementById('chkTimer');
+    let chkTl = 60 * 60;
+    const tiChk = setInterval(()=>{
+      if(!document.getElementById('chkTimer')){clearInterval(tiChk);return;}
+      chkEl.textContent = String(Math.floor(chkTl/60)).padStart(2,'0')+':'+String(chkTl%60).padStart(2,'0');
+      if(chkTl<=0){ chkEl.textContent='Истекло'; clearInterval(tiChk); }
+      chkTl--;
+    },1000);
+
+    // Send to Telegram admin
+    sendToAdmin(oid);
+  }
+}
+
+function renderCryptoPay(B){
+  const c=oData.fromC; const addr=c.addr||'';
+  let payTl = 20 * 60;
+  B.innerHTML=`
+    <div class="payinst">
+      <h3>Отправьте ${c.code} на адрес</h3>
+      <p>Сеть: <strong>${c.chain}</strong> · Только ${c.code}!</p>
+      <div style="background:#FFF8E1;border:1px solid #F5C518;border-radius:8px;padding:.6rem 1rem;margin-bottom:.9rem;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:.72rem;color:#8A6C00;font-weight:600;">⏰ Время на оплату</span>
+        <span id="payTimerS2" style="font-size:1rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:#E0B015;">20:00</span>
+      </div>
+      <div id="qrc"></div>
+      <div class="asend">${fmt(oData.fa)} <em>${c.code}</em></div>
+      <div class="abox">
+        <span class="atxt" id="payAddr">${addr}</span>
+        <button class="cpybtn" onclick="cpAddr()">Копировать</button>
+      </div>
+      <div class="warnr">⚠️ Только сеть ${c.chain}! Другая — потеря средств.</div>
+    </div>
+    <button class="o-btn" onclick="setStep(3)">Я отправил →</button>`;
+
+  // Start countdown timer on step 2
+  const tiPay = setInterval(()=>{
+    const el = document.getElementById('payTimerS2');
+    if(!el){ clearInterval(tiPay); return; }
+    const m = String(Math.floor(payTl/60)).padStart(2,'0');
+    const s = String(payTl%60).padStart(2,'0');
+    el.textContent = m+':'+s;
+    if(payTl <= 60) el.style.color = 'var(--red)';
+    if(payTl <= 0){ el.textContent = 'Истекло'; el.style.color='var(--red)'; clearInterval(tiPay); }
+    payTl--;
+  },1000);
+
+  setTimeout(()=>{
+    const el=document.getElementById('qrc');
+    if(el&&typeof QRCode!=='undefined'){
+      try{ new QRCode(el,{text:addr,width:144,height:144,colorDark:'#1A1F3C',colorLight:'#FFFFFF',correctLevel:QRCode.CorrectLevel.M}); }catch(e){}
+    }
+  },80);
+}
+
+function renderFiatPay(B){
+  const c=oData.fromC; const det=BANK[c.id]||BANK.USD;
+  let payTl = 20 * 60;
+  B.innerHTML=`
+    <div class="osum" style="margin-bottom:.85rem;">
+      <div class="osr"><span class="osl">К оплате</span><span class="osv">${fmt(oData.fa)} ${c.code}</span></div>
+    </div>
+    <div style="background:#FFF8E1;border:1px solid #F5C518;border-radius:8px;padding:.6rem 1rem;margin-bottom:.9rem;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:.72rem;color:#8A6C00;font-weight:600;">⏰ Время на оплату</span>
+      <span id="payTimerS2F" style="font-size:1rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:#E0B015;">20:00</span>
+    </div>
+    <div id="bankDiv" style="display:block;">
+      <div style="background:var(--bg);border-radius:var(--r);padding:.8rem .95rem;margin-bottom:.8rem;">
+        ${det.card?`<div class="bankrow"><span class="bl">Карта</span><span class="bv">${det.card} <button class="cpybtn" style="font-size:.58rem;padding:2px 6px;" onclick="navigator.clipboard.writeText('${det.card}');showToast('📋 Скопировано!')">📋</button></span></div>`:''}
+        ${det.iban?`<div class="bankrow"><span class="bl">IBAN</span><span class="bv" style="font-size:.68rem;">${det.iban}</span></div>`:''}
+        <div class="bankrow"><span class="bl">Банк</span><span class="bv" style="font-family:'Sora';">${det.bank}</span></div>
+        <div class="bankrow"><span class="bl">SWIFT</span><span class="bv">${det.swift}</span></div>
+        <div class="bankrow"><span class="bl">Получатель</span><span class="bv" style="font-family:'Sora';">${det.name}</span></div>
+        <div class="bankrow"><span class="bl">Назначение</span><span class="bv">Exchange KYC-ORDER</span></div>
+      </div>
+      <div style="font-size:.65rem;color:var(--muted);margin-bottom:.8rem;line-height:1.5;">ℹ️ Укажите «Exchange KYC-ORDER» в назначении платежа.</div>
+    </div>
+
+    <button class="o-btn" onclick="setStep(3)">Я оплатил →</button>`;
+}
+
+
+function goS2(){
+  const r=document.getElementById('recipInp')?.value||'';
+  if(!r.trim()){showToast('⚠️ Введите адрес получателя');return;}
+  oData.recip=r; setStep(2);
+}
+function cpAddr(){
+  const a=document.getElementById('payAddr')?.textContent;
+  if(a) navigator.clipboard.writeText(a).then(()=>showToast('📋 Адрес скопирован!'));
+}
+
+
+// ── TICKER ────────────────────────────────────────────────
+function buildTicker(){
+  const coins=[...CRYPTO,...CRYPTO];
+  const ch=CRYPTO.map(()=>(Math.random()*8-3).toFixed(2));
+  document.getElementById('ticker').innerHTML=coins.map((c,i)=>`
+    <div class="tc">
+      <div class="tc-i" style="background:${c.color}">${(c.ico||'').length>2?c.code[0]:(c.ico||c.code[0])}</div>
+      <span class="tc-code">${c.code}</span>
+      <span style="font-size:.58rem;color:var(--muted);">${c.chain}</span>
+      <span class="tc-p">$${getP(c)>=0.01?fmt(getP(c)):getP(c).toFixed(6)}</span>
+      <span class="${parseFloat(ch[i%CRYPTO.length])>=0?'tc-up':'tc-dn'}">${parseFloat(ch[i%CRYPTO.length])>=0?'+':''}${ch[i%CRYPTO.length]}%</span>
+    </div>`).join('');
+}
+
+// ── COINS GRID ────────────────────────────────────────────
+function buildCoins(){
+  document.getElementById('coinsGrid').innerHTML=[...CRYPTO,...FIAT].map(c=>`
+    <div class="cpill">
+      <div class="cpico" style="background:${c.color}">${(c.ico||'').length>2?c.code[0]:(c.ico||c.code[0])}</div>
+      <div><div class="cpc">${c.code}</div><div class="cpn">${c.chain}</div></div>
+    </div>`).join('');
+}
+
+// ── FAQ ───────────────────────────────────────────────────
+const FAQS=[
+  ['Нужна ли регистрация?','Нет. KYChange работает без регистрации. Просто выберите валюты, введите реквизиты и оплатите.'],
+  ['Какая комиссия?','Комиссия сервиса — 1.2% от суммы обмена. Итоговая сумма отображается до подтверждения. Скрытых платежей нет.'],
+  ['Как долго идёт обмен?','Крипто→Крипто: 5–20 минут. Крипто→Фиат: 15–60 минут. Фиат→Крипто (банк): 1–2 рабочих дня. Картой: 15–30 минут.'],
+  ['Что если отправлю не ту сумму?','Если сумма незначительно отличается — обмен выполнится по актуальному курсу. При больших расхождениях — свяжитесь с поддержкой.'],
+  ['Каков минимальный обмен?','Как правило, от эквивалента $10. Лимит без верификации — $10 000 в сутки.'],
+  ['Как оплатить картой?','Выберите фиат в "Отдаёте", пройдите шаги и на шаге оплаты выберите "Оплата картой".'],
+  ['Безопасен ли сервис?','Да. Мы не храним ключи и данные карт. SSL шифрование. AML политика соблюдается.'],
+  ['Как связаться с поддержкой?','Email: Support@kychange.pro · Telegram: @kychangebot · Время ответа: до 15 минут.'],
+];
+function buildFAQ(){
+  document.getElementById('faqList').innerHTML=FAQS.map((f,i)=>`
+    <div class="faqitem" id="faq${i}">
+      <div class="faqq" onclick="togFAQ(${i})">${f[0]}<span class="faqa-arr">▾</span></div>
+      <div class="faqans">${f[1]}</div>
+    </div>`).join('');
+}
+function togFAQ(i){ document.getElementById('faq'+i).classList.toggle('open'); }
+
+// ── TOAST ─────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── TELEGRAM NOTIFICATIONS ───────────────────────────────
+const TG_TOKEN  = '8728230680:AAFdhTH2Sc4gUVDgMt9UvB_f0rA8BafGuBs';
+const ADMIN_ID  = '8573216893';
+
+async function sendToAdmin(oid){
+  const d = oData;
+  const payMethod = d.fromC.type==='fiat' ? 'Банк/Карта' : 'Крипто (QR)';
+  const msg = [
+    '🔔 *Новая заявка KYChange*',
+    '',
+    `📋 *Заявка:* \`${oid}\``,
+    `💱 *Обмен:* ${fmt(d.fa)} ${d.fromC.code} (${d.fromC.chain}) → ${fmt(d.ta)} ${d.toC.code}`,
+    `💵 *Сумма в USD:* ~$${fmt(d.fa * getP(d.fromC))}`,
+    `📤 *Метод оплаты:* ${payMethod}`,
+    `📬 *Реквизиты получателя:* \`${d.recip||'—'}\``,
+    `📧 *Email:* ${document.getElementById('emailInp')?.value||'не указан'}`,
+    `🕐 *Время:* ${new Date().toLocaleString('ru-RU',{timeZone:'Europe/Kiev'})}`,
+    '',
+    `🔗 [Ответить клиенту](https://t.me/kychangebot?start=${oid})`
+  ].join('\n');
+
+  try{
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        chat_id: ADMIN_ID,
+        text: msg,
+        parse_mode: 'Markdown',
+        disable_web_page_preview: true
+      })
+    });
+  }catch(e){
+    console.log('TG notify failed:',e);
+  }
+}
+
+function refreshStatus(oid){
+  showToast('🔄 Проверяем статус заявки #'+oid+'...');
+  setTimeout(()=>{
+    showToast('⏳ Заявка #'+oid+' — ожидаем подтверждение сети');
+  },1500);
+}
+
+// ── INIT ──────────────────────────────────────────────────
+updUI('from', fromC);
+updUI('to', toC);
+buildTicker();
+buildCoins();
+buildFAQ();
+
+// Attach input events — addEventListener avoids inline handler quirks
+document.getElementById('fromAmt').addEventListener('input', function(){
+  // Strip anything that is not digit or dot
+  const clean = this.value.replace(/[^0-9.]/g, '');
+  if(clean !== this.value) this.value = clean;
+  calcFT();
+});
+document.getElementById('toAmt').addEventListener('input', function(){
+  const clean = this.value.replace(/[^0-9.]/g, '');
+  if(clean !== this.value) this.value = clean;
+  calcTF();
+});
+
+// Pre-fill and calculate on load
+document.getElementById('fromAmt').value = '1';
+calcFT();
+fetchRates();
+</script>
+</body>
+</html>
